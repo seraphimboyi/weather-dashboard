@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { type LocationResult } from "../../../types/weatherApi";
+import { Title, Container, InputWrapper, Input, Ul, Li } from "./styled";
 
 type SearchLocationProps = {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   setLatitude: (lat: number) => void;
   setLongitude: (lon: number) => void;
+  setCityName: (name: string) => void; 
 };
 
 const SearchLocation: React.FC<SearchLocationProps> = ({
@@ -13,16 +15,17 @@ const SearchLocation: React.FC<SearchLocationProps> = ({
   setSearchQuery,
   setLatitude,
   setLongitude,
+  setCityName,
 }) => {
   const [locations, setLocations] = useState<LocationResult[]>([]);
-  const [showSuggestions, setShowSuggestions] = useState<boolean>(true); // 控制提示列表顯示
+  const [showSuggestions, setShowSuggestions] = useState<boolean>(true); 
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   // 監聽輸入框變化，搜尋地點
   useEffect(() => {
     if (searchQuery.length < 2) {
-      setLocations([]); // 清空搜尋結果
+      setLocations([]);
       return;
     }
 
@@ -35,7 +38,7 @@ const SearchLocation: React.FC<SearchLocationProps> = ({
 
         const data = await response.json();
         setLocations(data.results || []);
-        setShowSuggestions(true); // 當 API 有結果時才顯示提示
+        setShowSuggestions(true);
       } catch (error) {
         console.error("搜尋地點時發生錯誤:", error);
       }
@@ -45,41 +48,44 @@ const SearchLocation: React.FC<SearchLocationProps> = ({
   }, [searchQuery]);
 
   return (
-    <>
-      <h2>搜尋地點</h2>
-      <input
-        ref={inputRef}
-        type="text"
-        placeholder="輸入城市名稱"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        onFocus={() => setShowSuggestions(true)} // 當獲取焦點時，顯示提示
-        onBlur={() => setTimeout(() => setShowSuggestions(false), 200)} // 失去焦點後延遲隱藏，以防止點擊時立即消失
-      />
+    <Container>
+      <Title>搜尋地點</Title>
+      <InputWrapper>
+        <Input
+          ref={inputRef}
+          type="text"
+          placeholder="請輸入城市名稱"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onFocus={() => setShowSuggestions(true)}
+          onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+        />
+      </InputWrapper>
 
       {/* 搜尋結果列表 */}
       {showSuggestions && locations.length > 0 && (
-        <ul>
+        <Ul>
           {locations.map((location) => (
-            <li
+            <Li
               key={location.id}
               onClick={() => {
                 setLatitude(location.latitude);
                 setLongitude(location.longitude);
+                setCityName(location.name);
                 setSearchQuery("");
-                setShowSuggestions(false); // 選擇後隱藏建議
+                setShowSuggestions(false);
                 setTimeout(() => {
                   inputRef.current?.blur();
                 }, 100);
               }}
             >
-              {location.name}, {location.country} ({location.latitude},{" "}
+              {location.name}, {location.country} ({location.latitude},
               {location.longitude})
-            </li>
+            </Li>
           ))}
-        </ul>
+        </Ul>
       )}
-    </>
+    </Container>
   );
 };
 
