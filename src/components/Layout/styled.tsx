@@ -17,6 +17,7 @@ export const Header = styled.header`
 export const Title = styled.h1`
   font-size: 40px;
   font-weight: bold;
+  cursor: pointer;
 `;
 
 export const Main = styled.main`
