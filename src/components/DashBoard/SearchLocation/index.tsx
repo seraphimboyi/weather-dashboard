@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { type LocationResult } from "../../../types/weatherApi";
-import { Title, Container, InputWrapper, Input, Ul, Li } from "./styled";
+import { Container, InputWrapper, Input, Ul, Li } from "./styled";
 
 type SearchLocationProps = {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   setLatitude: (lat: number) => void;
   setLongitude: (lon: number) => void;
-  setCityName: (name: string) => void; 
+  setCityName: (name: string) => void;
 };
 
 const SearchLocation: React.FC<SearchLocationProps> = ({
@@ -18,7 +18,7 @@ const SearchLocation: React.FC<SearchLocationProps> = ({
   setCityName,
 }) => {
   const [locations, setLocations] = useState<LocationResult[]>([]);
-  const [showSuggestions, setShowSuggestions] = useState<boolean>(true); 
+  const [showSuggestions, setShowSuggestions] = useState<boolean>(true);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -49,12 +49,11 @@ const SearchLocation: React.FC<SearchLocationProps> = ({
 
   return (
     <Container>
-      <Title>搜尋地點</Title>
       <InputWrapper>
         <Input
           ref={inputRef}
           type="text"
-          placeholder="請輸入城市名稱"
+          placeholder="請輸入城市名稱 ex: Taipei"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onFocus={() => setShowSuggestions(true)}

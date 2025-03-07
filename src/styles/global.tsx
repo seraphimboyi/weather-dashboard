@@ -40,6 +40,7 @@ footer, header, hgroup, menu, nav, section {
 body {
 	line-height: 1.5;
 	font-family: 'Poppins', sans-serif;
+	background-color: #0C232D;
 }
 ol, ul {
 	list-style: none;

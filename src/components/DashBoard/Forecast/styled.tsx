@@ -17,13 +17,6 @@ export const Container = styled.div`
   background-size: cover;
   background-position: center;
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8);
-  padding: 20px 0px;
-`;
-
-export const Title = styled.h3`
-  font-size: 24px;
-  font-weight: bold;
-  color: #7ede88;
 `;
 
 export const Cards = styled.div`
@@ -55,13 +48,12 @@ export const Card = styled.div`
   border-radius: 10px;
   padding: 20px;
   background-color: rgba(61, 65, 85, 0.7);
-  backdrop-filter: blur(5px);
   display: flex;
   flex-direction: column;
   row-gap: 8px;
 `;
 
-export const CardTitle = styled.span`
+export const Date = styled.span`
   font-size: 20px;
   font-weight: bold;
   color: #c2eb0c;
