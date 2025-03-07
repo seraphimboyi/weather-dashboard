@@ -12,13 +12,6 @@ export const Container = styled.div`
   align-items: center;
   justify-content: center;
   row-gap: 20px;
-  padding: 20px 0px;
-`;
-
-export const Title = styled.h2`
-  font-size: 36px;
-  font-weight: bold;
-  color: #7ede88;
 `;
 
 export const InputWrapper = styled.div`
@@ -29,19 +22,16 @@ export const InputWrapper = styled.div`
 `;
 
 export const Input = styled.input`
+  height: 40px;
   width: 100%;
   border-radius: 5px;
   padding: 10px;
   font-size: 20px;
   text-align: center;
 
-  &::placeholder {
-    color: #b4beca; /* ✅ 讓 placeholder 也能適應背景 */
-  }
-
   &:focus {
     outline: none;
-    border: 1px solid rgba(134, 30, 30, 0.8);
+    border: 2px solid #c2eb0c;
     background: #b4beca;
   }
 `;
@@ -57,9 +47,10 @@ export const Ul = styled.ul`
 
 export const Li = styled.li`
   font-size: 18px;
+  color: #7ede88;
   border-bottom: 1px solid #b4beca;
   cursor: pointer;
   &:hover {
-    color: #86201e;
+    color: #fff;
   }
 `;

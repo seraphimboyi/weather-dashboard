@@ -1,18 +1,20 @@
 import React from "react";
 import { mapWeatherCode } from "../data";
 import { WeatherApiResponse } from "../../../types/weatherApi";
-import { Title, Container, Ul, Li } from "./styled";
+import { Container, Ul, Li, Button } from "./styled";
 
 type TypeCurrentProps = {
   weatherData: WeatherApiResponse;
   cityName: string;
-  isCelsius: boolean; // 🔹 新增屬性來控制溫度顯示
+  isCelsius: boolean;
+  addToFavorites: (city: string, lat: number, lon: number) => void;
 };
 
 const Current: React.FC<TypeCurrentProps> = ({
   weatherData,
   cityName,
   isCelsius,
+  addToFavorites,
 }) => {
   const {
     timezone,
@@ -24,16 +26,18 @@ const Current: React.FC<TypeCurrentProps> = ({
     },
   } = weatherData;
 
+  const latitude = weatherData.latitude ?? null;
+  const longitude = weatherData.longitude ?? null;
+
   const temperature = isCelsius
     ? temperature_2m
     : (temperature_2m * 9) / 5 + 32;
 
   return (
     <Container>
-      <Title>即時天氣狀況</Title>
       <Ul>
-        <Li>時區: {timezone || "未知地區"}</Li>
         <Li>城市名稱: {cityName || "未知城市"}</Li>
+        <Li>所在時區: {timezone || "未知地區"}</Li>
         <Li>
           當前溫度: {temperature.toFixed(1)}°{isCelsius ? "C" : "F"}
         </Li>
@@ -41,6 +45,9 @@ const Current: React.FC<TypeCurrentProps> = ({
         <Li>風速: {windspeed_10m} km/h</Li>
         <Li>濕度: {relative_humidity_2m}%</Li>
       </Ul>
+      <Button onClick={() => addToFavorites(cityName, latitude, longitude)}>
+        加入最愛
+      </Button>
     </Container>
   );
 };

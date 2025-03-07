@@ -1,60 +1,53 @@
-import { useEffect, useRef, useState } from "react";
-import {
-  type LocationResult,
-  type WeatherApiResponse,
-} from "../../types/weatherApi";
+import { useEffect, useState } from "react";
+import { type WeatherApiResponse } from "../../types/weatherApi";
 import Current from "./Current";
 import Forecast from "./Forecast";
 import SearchLocation from "./SearchLocation";
-import { Container, Button } from "./styled";
+import Favorite from "./Favorite";
+import {
+  Container,
+  Button,
+  ButtonWrapper,
+  ToastMessage,
+  WeatherFiled,
+  Title,
+} from "./styled";
+
+type FavoriteItem = {
+  name: string;
+  lat: number;
+  lon: number;
+};
 
 const DashBoard: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [locations, setLocations] = useState<LocationResult[]>([]);
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
-  const [cityName, setCityName] = useState<string>(""); 
+  const [cityName, setCityName] = useState<string>("");
   const [weatherData, setWeatherData] = useState<WeatherApiResponse | null>(
     null
   );
-  const [isCelsius, setIsCelsius] = useState<boolean>(true); // 🔹 新增狀態來控制溫度單位
+  const [isCelsius, setIsCelsius] = useState<boolean>(true);
+  const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
+  const [toastMessage, setToastMessage] = useState<string>("");
 
-  const inputRef = useRef<HTMLInputElement | null>(null);
-
-  // 監聽使用者輸入，搜尋地點
+  // 初始化 LocalStorage 的最愛城市
   useEffect(() => {
-    if (searchQuery.length < 2) {
-      setLocations([]);
-      return;
-    }
+    const storedFavorites = JSON.parse(
+      localStorage.getItem("favorites") || "[]"
+    );
+    setFavorites(storedFavorites);
+  }, []);
 
-    const fetchLocations = async () => {
-      try {
-        const response = await fetch(
-          `https://geocoding-api.open-meteo.com/v1/search?name=${searchQuery}&count=10&language=en&format=json`
-        );
-        if (!response.ok) throw new Error("地點搜尋失敗");
-
-        const data = await response.json();
-        setLocations(data.results || []);
-      } catch (error) {
-        console.error("搜尋地點時發生錯誤:", error);
-      }
-    };
-
-    fetchLocations();
-  }, [searchQuery]);
-
-  // 取得即時天氣 & 5 天天氣預報
+  // 取得天氣資料
   useEffect(() => {
     if (latitude === null || longitude === null) return;
 
     const fetchWeather = async () => {
       try {
         const response = await fetch(
-          `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weathercode,windspeed_10m,relative_humidity_2m&daily=temperature_2m_max,temperature_2m_min,weathercode&forecast_days=5&timezone=auto`
+          `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weathercode,windspeed_10m,relative_humidity_2m&daily=temperature_2m_max,temperature_2m_min,weathercode&forecast_days=7&timezone=auto`
         );
-
         if (!response.ok) throw new Error("天氣查詢失敗");
 
         const data: WeatherApiResponse = await response.json();
@@ -67,34 +60,83 @@ const DashBoard: React.FC = () => {
     fetchWeather();
   }, [latitude, longitude]);
 
-  const toggleTemperatureUnit = () => {
-    setIsCelsius((prev) => !prev);
+  // 顯示 Toast 訊息
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(""), 3000);
+  };
+
+  // 加入最愛
+  const addToFavorites = (city: string, lat: number, lon: number) => {
+    if (
+      favorites.some(
+        (fav) => fav.name === city && fav.lat === lat && fav.lon === lon
+      )
+    ) {
+      showToast(`已將 ${city} 加入過最愛囉`);
+      return;
+    }
+
+    const newFavorites = [...favorites, { name: city, lat, lon }];
+    setFavorites(newFavorites);
+    localStorage.setItem("favorites", JSON.stringify(newFavorites));
+    showToast(`已成功將 ${city} 加入最愛`);
+  };
+
+  // 移除最愛
+  const removeFromFavorites = (city: string, lat: number, lon: number) => {
+    const newFavorites = favorites.filter(
+      (fav) => !(fav.name === city && fav.lat === lat && fav.lon === lon)
+    );
+    setFavorites(newFavorites);
+    localStorage.setItem("favorites", JSON.stringify(newFavorites));
+    showToast(`已從最愛中移除 ${city}`);
+  };
+
+  // 點擊最愛城市時，查詢天氣
+  const handleFavoriteClick = (fav: FavoriteItem) => {
+    setLatitude(fav.lat);
+    setLongitude(fav.lon);
+    setCityName(fav.name);
+    showToast(`已載入 ${fav.name} 的天氣資訊`);
   };
 
   return (
     <Container>
-      <SearchLocation
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        setLatitude={setLatitude}
-        setLongitude={setLongitude}
-        setCityName={setCityName}
+      {toastMessage && <ToastMessage>{toastMessage}</ToastMessage>}
+
+      <Favorite
+        favorites={favorites}
+        onSelectCity={handleFavoriteClick}
+        onRemoveCity={removeFromFavorites}
       />
 
-      <Button onClick={toggleTemperatureUnit}>
-        {isCelsius ? "切換為華氏 °F 顯示" : "切換為攝氏 °C 顯示"}
-      </Button>
+      <WeatherFiled>
+        <SearchLocation
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          setLatitude={setLatitude}
+          setLongitude={setLongitude}
+          setCityName={setCityName}
+        />
+        <ButtonWrapper>
+          <Button onClick={() => setIsCelsius(!isCelsius)}>切換溫度顯示</Button>
+        </ButtonWrapper>
 
-      {weatherData && (
-        <>
-          <Current
-            weatherData={weatherData}
-            cityName={cityName}
-            isCelsius={isCelsius}
-          />
-          <Forecast weatherData={weatherData} isCelsius={isCelsius} />
-        </>
-      )}
+        {weatherData && (
+          <>
+            <Title>即時天氣狀況</Title>
+            <Current
+              weatherData={weatherData}
+              cityName={cityName}
+              isCelsius={isCelsius}
+              addToFavorites={addToFavorites}
+            />
+            <Title>未來 5 天天氣預報</Title>
+            <Forecast weatherData={weatherData} isCelsius={isCelsius} />
+          </>
+        )}
+      </WeatherFiled>
     </Container>
   );
 };

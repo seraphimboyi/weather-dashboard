@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
+  position: relative;
   display: flex;
   row-gap: 16px;
   flex-direction: column;
@@ -15,12 +16,6 @@ export const Container = styled.div`
   padding: 20px 0px;
 `;
 
-export const Title = styled.h3`
-  font-size: 24px;
-  font-weight: bold;
-  color: #7ede88;
-`;
-
 export const Ul = styled.ul`
   display: flex;
   flex-direction: column;
@@ -28,5 +23,21 @@ export const Ul = styled.ul`
 `;
 
 export const Li = styled.li`
-  font-size: 16px;
+  font-size: 20px;
+`;
+
+export const Button = styled.button`
+  position: absolute;
+  background-color: #c2eb0c;
+  right: 10px;
+  top: 10px;
+  padding: 4px 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  &:hover {
+    background-color: #5cbf6a;
+  }
 `;

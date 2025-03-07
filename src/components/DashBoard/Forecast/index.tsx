@@ -1,7 +1,7 @@
 import React from "react";
 import { mapWeatherCode } from "../data";
 import { WeatherApiResponse } from "../../../types/weatherApi";
-import { Title, Container, Cards, Card, P, CardTitle, Info } from "./styled";
+import { Container, Cards, Card, P, Date, Info } from "./styled";
 
 type TypeForecastProps = {
   weatherData: WeatherApiResponse;
@@ -18,19 +18,20 @@ const Forecast: React.FC<TypeForecastProps> = ({ weatherData, isCelsius }) => {
 
   return (
     <Container>
-      <Title>未來 5 天天氣預報</Title>
       <Cards>
-        {time.map((date, index) => (
+        {time.slice(1, 6).map((date, index) => (
           <Card key={date}>
-            <CardTitle>日期: {date} </CardTitle>
+            <Date>{date}</Date>
             <Info>
-              <P>天氣狀況: {mapWeatherCode(weathercode[index])}</P>
+              <P>天氣狀況: {mapWeatherCode(weathercode[index + 1])}</P>
               <P>
-                最高溫度: {convertTemp(temperature_2m_max[index]).toFixed(1)}°
+                最高溫度:
+                {convertTemp(temperature_2m_max[index + 1]).toFixed(1)}°
                 {isCelsius ? "C" : "F"}
               </P>
               <P>
-                最低溫度: {convertTemp(temperature_2m_min[index]).toFixed(1)}°
+                最低溫度:
+                {convertTemp(temperature_2m_min[index + 1]).toFixed(1)}°
                 {isCelsius ? "C" : "F"}
               </P>
             </Info>
