@@ -70,8 +70,18 @@ const DashBoard: React.FC = () => {
   // 顯示 Toast 訊息
   const showToast = (msg: string) => {
     setToastMessage(msg);
-    setTimeout(() => setToastMessage(""), 3000);
   };
+
+  // 監聽 `toastMessage`，在設定後 2.5 秒自動清除
+  useEffect(() => {
+    if (toastMessage) {
+      const timeout = setTimeout(() => {
+        setToastMessage("");
+      }, 2500);
+
+      return () => clearTimeout(timeout); // 清除計時器，防止重複觸發
+    }
+  }, [toastMessage]);
 
   // 加入最愛
   const addToFavorites = (city: string, lat: number, lon: number) => {
