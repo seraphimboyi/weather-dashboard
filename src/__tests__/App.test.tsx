@@ -5,5 +5,5 @@ import App from "../App";
 
 test("應該正確渲染 Hello World", () => {
   render(<App />);
-  expect(screen.getByText("Hello World")).toBeInTheDocument();
+  expect(screen.getByText("全球天氣查詢")).toBeInTheDocument();
 });
