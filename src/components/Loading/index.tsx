@@ -5,13 +5,13 @@ const Loading: React.FC = () => {
   return (
     <Container>
       <RainContainer>
-        <RainDrop />
-        <RainDrop />
-        <RainDrop />
-        <RainDrop />
-        <RainDrop />
+        <RainDrop data-testid="raindrop" />
+        <RainDrop data-testid="raindrop" />
+        <RainDrop data-testid="raindrop" />
+        <RainDrop data-testid="raindrop" />
+        <RainDrop data-testid="raindrop" />
       </RainContainer>
-      <Cloud />
+      <Cloud data-testid="cloud" />
     </Container>
   );
 };

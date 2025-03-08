@@ -37,8 +37,16 @@ const Favorite: React.FC<TypeFavoriteProps> = ({
 
   return (
     <Container $isExpanded={isExpanded}>
-      <ToggleButton onClick={() => setIsExpanded(!isExpanded)}>
-        {isExpanded ? "❌" : <Icon src="/favorite-icon.svg" alt="" />}
+      <ToggleButton
+        data-testid="toggle-button"
+        aria-expanded={isExpanded}
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
+        {isExpanded ? (
+          "❌"
+        ) : (
+          <Icon src="/favorite-icon.svg" alt="展開最愛列表" />
+        )}
       </ToggleButton>
 
       <List $isExpanded={isExpanded}>
