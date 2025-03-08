@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, useRef, useState } from "react";
 import { type LocationResult } from "../../../types/weatherApi";
 import { Container, InputWrapper, Input, Ul, Li } from "./styled";

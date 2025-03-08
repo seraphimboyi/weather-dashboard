@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import React from "react";
 import { type WeatherApiResponse } from "../../types/weatherApi";
 import Current from "./Current";
 import Forecast from "./Forecast";
