@@ -1,7 +1,7 @@
 import React from "react";
 import { mapWeatherCode } from "../data";
 import { WeatherApiResponse } from "../../../types/weatherApi";
-import { Container, Ul, Li, Button } from "./styled";
+import { Container, Info, Span, Button } from "./styled";
 
 type TypeCurrentProps = {
   weatherData: WeatherApiResponse;
@@ -35,16 +35,32 @@ const Current: React.FC<TypeCurrentProps> = ({
 
   return (
     <Container>
-      <Ul>
-        <Li>城市名稱: {cityName || "未知城市"}</Li>
-        <Li>所在時區: {timezone || "未知地區"}</Li>
-        <Li>
-          當前溫度: {temperature.toFixed(1)}°{isCelsius ? "C" : "F"}
-        </Li>
-        <Li>天氣狀況: {mapWeatherCode(weathercode)}</Li>
-        <Li>風速: {windspeed_10m} km/h</Li>
-        <Li>濕度: {relative_humidity_2m}%</Li>
-      </Ul>
+      <Info>
+        <div>
+          <Span>城市名稱:</Span> <p>{cityName || "未知城市"}</p>
+        </div>
+        <div>
+          <Span>所在時區:</Span> <p>{timezone || "未知地區"}</p>
+        </div>
+        <div>
+          <Span>當前溫度: </Span>
+          <p>
+            {temperature.toFixed(1)}° {isCelsius ? "C" : "F"}
+          </p>
+        </div>
+        <div>
+          <Span>天氣狀況:</Span>
+          <p> {mapWeatherCode(weathercode)}</p>
+        </div>
+        <div>
+          <Span>風速:</Span>
+          <p>{windspeed_10m} km/h</p>
+        </div>
+        <div>
+          <Span>濕度: </Span>
+          <p>{relative_humidity_2m} %</p>
+        </div>
+      </Info>
       <Button onClick={() => addToFavorites(cityName, latitude, longitude)}>
         加入最愛
       </Button>

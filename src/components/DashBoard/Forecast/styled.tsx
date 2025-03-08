@@ -59,7 +59,11 @@ export const Date = styled.span`
   color: #c2eb0c;
 `;
 
-export const Info = styled.div``;
+export const Info = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: 4px;
+`;
 
 export const P = styled.p`
   font-size: 16px;

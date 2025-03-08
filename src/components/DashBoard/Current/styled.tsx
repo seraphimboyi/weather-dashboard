@@ -11,19 +11,24 @@ export const Container = styled.div`
   border-radius: 10px;
   background-image: url("/current.jpg");
   background-size: cover;
-  background-position: center;
+  background-position: unset;
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8);
-  padding: 20px 0px;
+  padding: 40px 12px;
 `;
 
-export const Ul = styled.ul`
+export const Info = styled.div`
   display: flex;
   flex-direction: column;
+  row-gap: 10px;
   color: wheat;
+  text-align: center;
 `;
 
-export const Li = styled.li`
+export const Span = styled.span`
   font-size: 20px;
+  font-weight: bold;
+  color: #c2eb0c;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8);
 `;
 
 export const Button = styled.button`

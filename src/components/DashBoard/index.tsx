@@ -4,6 +4,7 @@ import Current from "./Current";
 import Forecast from "./Forecast";
 import SearchLocation from "./SearchLocation";
 import Favorite from "./Favorite";
+import Loading from "../Loading";
 import {
   Container,
   Button,
@@ -30,6 +31,7 @@ const DashBoard: React.FC = () => {
   const [isCelsius, setIsCelsius] = useState<boolean>(true);
   const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
   const [toastMessage, setToastMessage] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   // 初始化 LocalStorage 的最愛城市
   useEffect(() => {
@@ -44,6 +46,8 @@ const DashBoard: React.FC = () => {
     if (latitude === null || longitude === null) return;
 
     const fetchWeather = async () => {
+      setLoading(true);
+
       try {
         const response = await fetch(
           `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weathercode,windspeed_10m,relative_humidity_2m&daily=temperature_2m_max,temperature_2m_min,weathercode&forecast_days=7&timezone=auto`
@@ -54,6 +58,8 @@ const DashBoard: React.FC = () => {
         setWeatherData(data);
       } catch (error) {
         console.error("取得天氣資料時發生錯誤:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -83,32 +89,26 @@ const DashBoard: React.FC = () => {
     showToast(`已成功將 ${city} 加入最愛`);
   };
 
-  // 移除最愛
-  const removeFromFavorites = (city: string, lat: number, lon: number) => {
-    const newFavorites = favorites.filter(
-      (fav) => !(fav.name === city && fav.lat === lat && fav.lon === lon)
-    );
-    setFavorites(newFavorites);
-    localStorage.setItem("favorites", JSON.stringify(newFavorites));
-    showToast(`已從最愛中移除 ${city}`);
-  };
-
-  // 點擊最愛城市時，查詢天氣
-  const handleFavoriteClick = (fav: FavoriteItem) => {
-    setLatitude(fav.lat);
-    setLongitude(fav.lon);
-    setCityName(fav.name);
-    showToast(`已載入 ${fav.name} 的天氣資訊`);
-  };
-
   return (
     <Container>
       {toastMessage && <ToastMessage>{toastMessage}</ToastMessage>}
 
       <Favorite
         favorites={favorites}
-        onSelectCity={handleFavoriteClick}
-        onRemoveCity={removeFromFavorites}
+        onSelectCity={(fav) => {
+          setLatitude(fav.lat);
+          setLongitude(fav.lon);
+          setCityName(fav.name);
+          showToast(`已載入 ${fav.name} 的天氣資訊`);
+        }}
+        onRemoveCity={(city, lat, lon) => {
+          const newFavorites = favorites.filter(
+            (fav) => !(fav.name === city && fav.lat === lat && fav.lon === lon)
+          );
+          setFavorites(newFavorites);
+          localStorage.setItem("favorites", JSON.stringify(newFavorites));
+          showToast(`已從最愛中移除 ${city}`);
+        }}
       />
 
       <WeatherFiled>
@@ -119,11 +119,17 @@ const DashBoard: React.FC = () => {
           setLongitude={setLongitude}
           setCityName={setCityName}
         />
-        <ButtonWrapper>
-          <Button onClick={() => setIsCelsius(!isCelsius)}>切換溫度顯示</Button>
-        </ButtonWrapper>
 
         {weatherData && (
+          <ButtonWrapper>
+            <Button onClick={() => setIsCelsius(!isCelsius)}>
+              {isCelsius ? "切換華氏" : "切換攝氏"}
+            </Button>
+          </ButtonWrapper>
+        )}
+
+        {loading && <Loading />}
+        {!loading && weatherData && (
           <>
             <Title>即時天氣狀況</Title>
             <Current

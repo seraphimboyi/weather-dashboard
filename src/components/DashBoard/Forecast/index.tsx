@@ -23,15 +23,10 @@ const Forecast: React.FC<TypeForecastProps> = ({ weatherData, isCelsius }) => {
           <Card key={date}>
             <Date>{date}</Date>
             <Info>
-              <P>天氣狀況: {mapWeatherCode(weathercode[index + 1])}</P>
+              <P>{mapWeatherCode(weathercode[index + 1])}</P>
               <P>
-                最高溫度:
-                {convertTemp(temperature_2m_max[index + 1]).toFixed(1)}°
-                {isCelsius ? "C" : "F"}
-              </P>
-              <P>
-                最低溫度:
-                {convertTemp(temperature_2m_min[index + 1]).toFixed(1)}°
+                {convertTemp(temperature_2m_max[index + 1]).toFixed(1)} /{" "}
+                {convertTemp(temperature_2m_min[index + 1]).toFixed(1)}°{" "}
                 {isCelsius ? "C" : "F"}
               </P>
             </Info>
