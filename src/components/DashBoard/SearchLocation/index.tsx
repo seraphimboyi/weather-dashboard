@@ -19,32 +19,65 @@ const SearchLocation: React.FC<SearchLocationProps> = ({
 }) => {
   const [locations, setLocations] = useState<LocationResult[]>([]);
   const [showSuggestions, setShowSuggestions] = useState<boolean>(true);
-
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // 監聽輸入框變化，搜尋地點
+  // 監聽輸入框變化，搜尋地點（使用 Debounce + AbortController）
   useEffect(() => {
     if (searchQuery.length < 2) {
       setLocations([]);
       return;
     }
 
-    const fetchLocations = async () => {
-      try {
-        const response = await fetch(
-          `https://geocoding-api.open-meteo.com/v1/search?name=${searchQuery}&count=10&language=en&format=json`
-        );
-        if (!response.ok) throw new Error("地點搜尋失敗");
+    // **清除舊的 debounce 計時器**
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
 
-        const data = await response.json();
-        setLocations(data.results || []);
-        setShowSuggestions(true);
-      } catch (error) {
-        console.error("搜尋地點時發生錯誤:", error);
+    debounceTimeoutRef.current = setTimeout(() => {
+      // **取消之前的 API 請求**
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
+
+      const fetchLocations = async () => {
+        try {
+          const response = await fetch(
+            `https://geocoding-api.open-meteo.com/v1/search?name=${searchQuery}&count=10&language=en&format=json`,
+            { signal: controller.signal }
+          );
+
+          if (!response.ok) throw new Error("地點搜尋失敗");
+
+          const data = await response.json();
+          setLocations(data.results || []);
+          setShowSuggestions(true);
+        } catch (error) {
+          if (error instanceof Error) {
+            if (error.name === "AbortError") {
+              console.log("API 請求被中止");
+            } else {
+              console.error("搜尋地點時發生錯誤:", error.message);
+            }
+          } else {
+            console.error("未知錯誤:", error);
+          }
+        }
+      };
+
+      fetchLocations();
+    }, 300); // **300ms Debounce**
+
+    // **清理函數**
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
       }
     };
-
-    fetchLocations();
   }, [searchQuery]);
 
   return (
@@ -78,7 +111,7 @@ const SearchLocation: React.FC<SearchLocationProps> = ({
                 }, 100);
               }}
             >
-              {location.name}, {location.country} ({location.latitude},
+              {location.name}, {location.country} ({location.latitude},{" "}
               {location.longitude})
             </Li>
           ))}
