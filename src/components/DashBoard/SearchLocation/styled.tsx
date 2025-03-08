@@ -50,7 +50,12 @@ export const Li = styled.li`
   color: #7ede88;
   border-bottom: 1px solid #b4beca;
   cursor: pointer;
+
   &:hover {
     color: #fff;
+  }
+  
+  &:last-child {
+    border-bottom: none;
   }
 `;

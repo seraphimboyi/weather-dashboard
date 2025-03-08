@@ -8,6 +8,7 @@ import {
   ToggleButton,
   List,
   Title,
+  Icon,
 } from "./styled";
 
 type TypeFavoriteItem = {
@@ -37,7 +38,7 @@ const Favorite: React.FC<TypeFavoriteProps> = ({
   return (
     <Container $isExpanded={isExpanded}>
       <ToggleButton onClick={() => setIsExpanded(!isExpanded)}>
-        {isExpanded ? "❌" : "⭐"}
+        {isExpanded ? "❌" : <Icon src="/favorite-icon.svg" alt="" />}
       </ToggleButton>
 
       <List $isExpanded={isExpanded}>

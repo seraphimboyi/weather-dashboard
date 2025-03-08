@@ -65,10 +65,12 @@ const fadeInOut = keyframes`
 // Toast 訊息樣式
 export const ToastMessage = styled.div`
   position: fixed;
+  max-width: 300px;
+  width: 100%;
   top: 20px;
   right: 20px;
   background: rgba(0, 0, 0, 0.8);
-  color: #7ede88;
+  color: #c2eb0c;
   padding: 12px 20px;
   border-radius: 5px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);

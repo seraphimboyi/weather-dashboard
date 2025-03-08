@@ -8,6 +8,8 @@ export const Container = styled.div`
 `;
 
 export const Header = styled.header`
+  display: flex;
+  justify-content: center;
   background-color: #333;
   text-align: center;
   color: #7ede88;

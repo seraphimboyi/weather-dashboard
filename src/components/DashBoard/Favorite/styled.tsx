@@ -12,9 +12,10 @@ export const Container = styled.div<ContainerProps>`
   padding-top: 60px;
   position: fixed;
   z-index: 1000;
-  left: ${({ $isExpanded }) => ($isExpanded ? "0" : "-250px")};
+  left: ${({ $isExpanded }) => ($isExpanded ? "0" : "-375px")};
   top: 0;
-  width: 250px;
+  width: 100%;
+  max-width: 375px;
   height: 100vh;
   background: rgba(0, 0, 0, 0.8);
   color: white;
@@ -46,6 +47,8 @@ export const Li = styled.li`
 `;
 
 export const CityButton = styled.button`
+  text-align: left;
+  max-width: 280px;
   background-color: #c2eb0c;
   color: black;
   border: none;
@@ -74,6 +77,11 @@ export const RemoveButton = styled.button`
 `;
 
 export const ToggleButton = styled.button`
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: fixed;
   left: 12px;
   top: 10px;
@@ -88,4 +96,9 @@ export const ToggleButton = styled.button`
   &:hover {
     background: #0056b3;
   }
+`;
+
+export const Icon = styled.img`
+  width: 100%;
+  height: 100%;
 `;
