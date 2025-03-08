@@ -54,8 +54,14 @@ export const Li = styled.li`
   &:hover {
     color: #fff;
   }
-  
+
   &:last-child {
     border-bottom: none;
   }
+`;
+
+export const ErrorMessage = styled.p`
+  color: #ff4d4d;
+  font-size: 16px;
+  text-align: center;
 `;

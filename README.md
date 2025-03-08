@@ -52,6 +52,7 @@
 - `public/` - 靜態資源 (e.g. 圖片, favicon)
 - `src/` - 主要的 React 程式碼
 - `components/` - 可重用的 UI 元件
+- `hooks/` - 可重用的 Hook
 - `styles/` - 全局樣式與主題設定
 - `types/` - TypeScript 型別定義
 - `__tests__/` - 測試相關檔案
@@ -65,6 +66,7 @@
 │   │   ├── DashBoard/
 │   │   ├── Layout/
 │   │   ├── Loading/
+│   ├── hooks/
 │   ├── styles/
 │   ├── types/
 │   ├── App.tsx
