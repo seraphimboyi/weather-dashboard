@@ -26,15 +26,9 @@ export const Cards = styled.div`
   padding: 20px 12px;
   justify-content: center;
   width: 100%;
-  @media ${Mobile} {
-    grid-template-columns: repeat(2, 1fr);
-  }
   @media ${Tablet} {
     grid-template-columns: repeat(3, 1fr);
     padding: 20px;
-  }
-  @media ${Desktop} {
-    grid-template-columns: repeat(4, 1fr);
   }
   @media ${ExtraLarge} {
     grid-template-columns: repeat(5, 1fr);
@@ -66,6 +60,6 @@ export const Info = styled.div`
 `;
 
 export const P = styled.p`
-  font-size: 16px;
+  font-size: 18px;
   color: wheat;
 `;

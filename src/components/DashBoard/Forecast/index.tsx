@@ -3,12 +3,12 @@ import { mapWeatherCode } from "../data";
 import { WeatherApiResponse } from "../../../types/weatherApi";
 import { Container, Cards, Card, P, Date, Info } from "./styled";
 
-type TypeForecastProps = {
+type ForecastProps = {
   weatherData: WeatherApiResponse;
   isCelsius: boolean;
 };
 
-const Forecast: React.FC<TypeForecastProps> = ({ weatherData, isCelsius }) => {
+const Forecast: React.FC<ForecastProps> = ({ weatherData, isCelsius }) => {
   const {
     daily: { time, weathercode, temperature_2m_min, temperature_2m_max },
   } = weatherData;
