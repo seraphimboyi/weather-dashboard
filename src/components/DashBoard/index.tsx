@@ -6,6 +6,7 @@ import Forecast from "./Forecast";
 import SearchLocation from "./SearchLocation";
 import Favorite from "./Favorite";
 import Loading from "../Loading";
+import { FavoriteItem } from "../../types/favoriteItem";
 import {
   Container,
   Button,
@@ -13,26 +14,22 @@ import {
   ToastMessage,
   WeatherFiled,
   Title,
+  NoDataMessage,
 } from "./styled";
 
-type FavoriteItem = {
-  name: string;
-  lat: number;
-  lon: number;
-};
-
 const DashBoard: React.FC = () => {
+  const [weatherData, setWeatherData] = useState<WeatherApiResponse | null>(
+    null
+  );
+
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
   const [cityName, setCityName] = useState<string>("");
-  const [weatherData, setWeatherData] = useState<WeatherApiResponse | null>(
-    null
-  );
-  const [isCelsius, setIsCelsius] = useState<boolean>(true);
   const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
   const [toastMessage, setToastMessage] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+  const [isCelsius, setIsCelsius] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // 初始化 LocalStorage 的最愛城市
   useEffect(() => {
@@ -47,7 +44,7 @@ const DashBoard: React.FC = () => {
     if (latitude === null || longitude === null) return;
 
     const fetchWeather = async () => {
-      setLoading(true);
+      setIsLoading(true);
 
       try {
         const response = await fetch(
@@ -60,7 +57,7 @@ const DashBoard: React.FC = () => {
       } catch (error) {
         console.error("取得天氣資料時發生錯誤:", error);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
 
@@ -97,7 +94,7 @@ const DashBoard: React.FC = () => {
     const newFavorites = [...favorites, { name: city, lat, lon }];
     setFavorites(newFavorites);
     localStorage.setItem("favorites", JSON.stringify(newFavorites));
-    showToast(`已成功將 ${city} 加入最愛`);
+    showToast(`成功將 ${city} 加入最愛`);
   };
 
   return (
@@ -110,7 +107,7 @@ const DashBoard: React.FC = () => {
           setLatitude(fav.lat);
           setLongitude(fav.lon);
           setCityName(fav.name);
-          showToast(`已載入 ${fav.name} 的天氣資訊`);
+          showToast(`載入 ${fav.name} 的天氣資訊`);
         }}
         onRemoveCity={(city, lat, lon) => {
           const newFavorites = favorites.filter(
@@ -139,8 +136,9 @@ const DashBoard: React.FC = () => {
           </ButtonWrapper>
         )}
 
-        {loading && <Loading />}
-        {!loading && weatherData && (
+        {isLoading && <Loading />}
+
+        {!isLoading && weatherData ? (
           <>
             <Title>即時天氣狀況</Title>
             <Current
@@ -152,6 +150,14 @@ const DashBoard: React.FC = () => {
             <Title>未來 5 天天氣預報</Title>
             <Forecast weatherData={weatherData} isCelsius={isCelsius} />
           </>
+        ) : (
+          !isLoading && (
+            <NoDataMessage>
+              尚未查詢任何城市的天氣資訊，
+              <br />
+              請輸入城市名稱進行查詢！
+            </NoDataMessage>
+          )
         )}
       </WeatherFiled>
     </Container>

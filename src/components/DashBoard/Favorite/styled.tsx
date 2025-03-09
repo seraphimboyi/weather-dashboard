@@ -52,7 +52,7 @@ export const CityButton = styled.button`
   background-color: #c2eb0c;
   color: black;
   border: none;
-  font-size: 14px;
+  font-size: 18px;
   padding: 4px 10px;
   cursor: pointer;
   border-radius: 5px;

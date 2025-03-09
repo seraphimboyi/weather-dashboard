@@ -29,6 +29,13 @@ export const Container = styled.div`
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
 `;
 
+export const CloudWrapper = styled.div`
+  position: relative; /* 讓雨滴相對於雲朵定位 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 // ☁️ 雲朵 Spinner
 export const Cloud = styled.div`
   width: 100px;
@@ -63,7 +70,7 @@ export const Cloud = styled.div`
 
 export const RainContainer = styled.div`
   position: absolute;
-  top: 200px;
+  top: 50px; /* 讓雨滴從雲的底部開始 */
   display: flex;
   gap: 5px;
 `;

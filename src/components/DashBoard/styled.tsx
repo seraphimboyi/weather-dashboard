@@ -28,7 +28,7 @@ export const WeatherFiled = styled.div`
 `;
 
 export const Title = styled.h3`
-  font-size: 24px;
+  font-size: 30px;
   font-weight: bold;
   color: #7ede88;
   text-align: center;
@@ -76,4 +76,15 @@ export const ToastMessage = styled.div`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   animation: ${fadeInOut} 2.5s ease-in-out;
   z-index: 1000;
+`;
+
+export const NoDataMessage = styled.div`
+  width: 100%;
+  text-align: center;
+  font-size: 20px;
+  color: #fff;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
 `;
